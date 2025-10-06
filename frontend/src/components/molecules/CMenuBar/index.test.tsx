@@ -48,7 +48,6 @@ describe("components/molecules/CMenuBarテスト", () => {
     const disabledItem = await screen.findByRole("menuitem", { name: "無効項目" });
     expect(disabledItem).toBeDisabled();
   });
-  
 
   test("一覧表示されるrole, 「menuitem」で非表示要素の「非表示項目」が存在しないこと ", async () => {
     render(<CMenuBar menubarTriggerNode={<CButton>{TRIGGER_NODE_BUTTON_TEXT}</CButton>} menubarItems={menubarItems} />);

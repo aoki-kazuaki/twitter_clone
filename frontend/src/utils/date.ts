@@ -20,6 +20,6 @@ export const dateFormatRelative = (target: Dayjs, fallback: string = "-"): strin
 };
 
 /**現在の日付時刻のタイムスタンプを返却する */
-export const dateCurrentTimeStamp = ():string => {
-    return dayjs().format("YYYY-MM-DDTHH:mm:ss")
-}
+export const dateCurrentTimeStamp = (): string => {
+  return dayjs().format("YYYY-MM-DDTHH:mm:ss");
+};
