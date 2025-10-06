@@ -1,0 +1,9 @@
+node_modules
+build
+.vscode
+*.ico
+*.png
+src/globals.css
+.gitignore
+.prettierrc.json
+components.json
