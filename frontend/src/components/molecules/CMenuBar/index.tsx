@@ -27,7 +27,7 @@ const CMenuBar: FC<Props> = ({ menubarTriggerNode, menubarItems }) => {
   return (
     <Menubar>
       <MenubarMenu>
-        <MenubarTrigger className="border-0">{menubarTriggerNode}</MenubarTrigger>
+        <MenubarTrigger asChild className="border-0">{menubarTriggerNode}</MenubarTrigger>
         <MenubarContent>
           {filteredHiddenItems.map((detail) => (
             <MenubarItem inset key={detail.menubarItemText} onClick={detail.onClick} disabled={detail.disabled}>
