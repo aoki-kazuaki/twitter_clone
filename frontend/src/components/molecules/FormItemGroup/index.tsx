@@ -11,7 +11,10 @@ const FormItemGroup: FC<Props> = ({ thisFormItems, className, ...other }) => {
   return (
     <div className={clsx("flex flex-col gap-4", className)} {...other}>
       {thisFormItems.map((item) => (
-        <FormItem key={item.id} id={item.id} labelText={item.labelText} formItem={item.formItem} validationMessage={item.validationMessage} />
+        <FormItem
+          key={item.id}
+          {...item}
+        />
       ))}
     </div>
   );

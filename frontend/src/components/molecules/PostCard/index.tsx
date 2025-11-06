@@ -73,7 +73,7 @@ const PostCard: FC<Props> = ({
             <p>{postResponse.postedMessage}</p>
             {postFilesExists && (
               <div>
-                {isActive ? (
+                {isActive && (
                   <ul className="flex flex-col items-center gap-3">
                     {postResponse.postedFileUrls.map((item) => (
                       <li key={item}>
@@ -81,7 +81,8 @@ const PostCard: FC<Props> = ({
                       </li>
                     ))}
                   </ul>
-                ) : (
+                )}
+                {!isActive && (
                   <div className="mx-auto flex w-10/12 flex-col gap-1">
                     <CImage className="w-full" src={postResponse.postedFileUrls[FILES_FIRST_INDEX]} />
                     <p className="text-right">{viewOtherPostFilesLength()}</p>
