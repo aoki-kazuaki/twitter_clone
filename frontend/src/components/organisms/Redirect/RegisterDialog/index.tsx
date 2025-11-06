@@ -13,17 +13,23 @@ import { z } from "zod";
 type ThisFormValues = {
   id: string;
   password: string;
+  handleName: string;
+  greetingMessage: string;
 };
 
 const RedirectRegisterDialog: FC = () => {
   const navigate = useNavigate();
 
-  const THIS_FORM_ID_ID = "login_id";
-  const THIS_FORM_PASSWORD_ID = "login_password";
+  const THIS_FORM_ID_ID = "newLoginId";
+  const THIS_FORM_PASSWORD_ID = "newLoginPassword";
+  const THIS_FORM_HANDLE_NAME_ID = "newHandleName";
+  const THIS_FORM_GREETING_MESSAGE_ID = "newGreetingMEssage";
 
   const thisFormSchema = z.object({
-    id: z.string().min(1, { message: "登録にはIDが必要です" }),
-    password: z.string().min(1, { message: "登録にはパスワードが必要です" })
+    id: z.string().min(1, { message: "IDを入力してください" }),
+    password: z.string().min(1, { message: "パスワードを入力してください" }),
+    handleName: z.string().min(1, { message: "ユーザー名を入力してください" }),
+    greetingMessage: z.string()
   });
 
   const {
@@ -39,13 +45,28 @@ const RedirectRegisterDialog: FC = () => {
       id: THIS_FORM_ID_ID,
       labelText: "新規ユーザーID",
       formItem: <CInput id={THIS_FORM_ID_ID} {...register("id")} />,
-      validationMessage: errors.id?.message
+      validationMessage: errors.id?.message,
+      isRequired: true
     },
     {
       id: THIS_FORM_PASSWORD_ID,
       labelText: "新規パスワード",
       formItem: <CInput id={THIS_FORM_PASSWORD_ID} {...register("password")} />,
-      validationMessage: errors.password?.message
+      validationMessage: errors.password?.message,
+      isRequired: true
+    },
+    {
+      id: THIS_FORM_HANDLE_NAME_ID,
+      labelText: "新規ユーザー名",
+      formItem: <CInput id={THIS_FORM_HANDLE_NAME_ID} {...register("handleName")} />,
+      validationMessage: errors.handleName?.message,
+      isRequired: true
+    },
+    {
+      id: THIS_FORM_GREETING_MESSAGE_ID,
+      labelText: "自己紹介文",
+      formItem: <CInput id={THIS_FORM_GREETING_MESSAGE_ID} {...register("greetingMessage")} />,
+      validationMessage: errors.greetingMessage?.message
     }
   ];
 
@@ -58,7 +79,7 @@ const RedirectRegisterDialog: FC = () => {
   };
 
   return (
-    <CDialogTriggerLess dialogTitle="新規登録" description="ID,パスワードを入力してください">
+    <CDialogTriggerLess dialogTitle="新規登録">
       <form onSubmit={handleSubmit(onSubmit)}>
         <Container className="flex flex-col gap-8">
           <FormItemGroup thisFormItems={thisFormItems} />
