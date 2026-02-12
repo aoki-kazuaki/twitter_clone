@@ -2,7 +2,7 @@ import Container from "@/components/molecules/Container";
 import HomeAccordionProfileArea from "@/components/organisms/Home/AccordionProfileArea";
 import HomeGreetingArea from "@/components/organisms/Home/GreetingArea";
 import HomeHeroBanner from "@/components/organisms/Home/HeroBanner";
-import HomeToNextDrawerForm from "@/components/organisms/Home/HomeToNextDrawer";
+import HomeToNextDrawerForm from "@/components/organisms/Home/ToNextDrawerForm";
 import type { FC } from "react";
 
 type Props = {};
