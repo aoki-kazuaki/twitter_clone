@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS user_auth(
 -- テーブル名（物理名）: user_profile
 -- 備考・説明: ユーザープロフィールを管理する, ユーザーUUID以外は公開情報
 CREATE TABLE IF NOT EXISTS user_profile(
-    user_uuid UUID PRIMARY KEY,
+    user_uuid UUID PRIMARY KEY REFERENCES user_auth(user_uuid),
     handle_name VARCHAR(32) NOT NULL,
     greeting_message TEXT,
     profile_image_url TEXT,
