@@ -1,4 +1,4 @@
-from app.core.security import hash_password, verify_password
+from app.core.security import create_access_token, create_refresh_token, decode_access_token, hash_password, verify_password
 
 
 class TestSecurity:
@@ -39,3 +39,50 @@ class TestSecurity:
             hashed_password,
         )
         assert result is False
+
+    """
+    アクセストークン関連 utility テスト
+    """
+
+    def test_create_access_token_success(self):
+        """
+        アクセストークンを生成できること
+        """
+        user_uuid = "test-user-uuid"
+
+        token = create_access_token(user_uuid)
+
+        assert isinstance(token, str)
+        assert token != ""
+
+    def test_decode_access_token_success(self):
+        """
+        生成したアクセストークンをdecodeするとuser_uuidを取得できること
+        """
+        user_uuid = "test-user-uuid"
+
+        token = create_access_token(user_uuid)
+        payload = decode_access_token(token)
+
+        assert payload is not None
+        assert payload["sub"] == user_uuid
+        assert "exp" in payload
+
+    def test_create_refresh_token_success(self):
+        """
+        リフレッシュトークンを生成できること
+        """
+        user_uuid = "test-user-uuid"
+
+        token = create_refresh_token(user_uuid)
+
+        assert isinstance(token, str)
+        assert token != ""
+
+    def test_decode_access_token_invalid_token(self):
+        """
+        不正なアクセストークンの場合、Noneが返却されること
+        """
+        payload = decode_access_token("invalid-token")
+
+        assert payload is None
