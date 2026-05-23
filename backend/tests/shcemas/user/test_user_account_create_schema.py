@@ -1,8 +1,8 @@
 from pydantic import ValidationError
 import pytest
 
-from app.schemas.user_account_schema import UserAccountCreateRequest
-from app.core.error_codes import ErrorCodes
+from app.schemas.base_models.user_account_schema import UserAccountCreateRequest
+from app.core.error_codes import UserAccountCreateErrorCodes
 
 
 class TestUserAccountCreateRequest:
@@ -39,7 +39,7 @@ class TestUserAccountCreateRequest:
                 greetingMessage="",
             )
 
-        assert ErrorCodes.USER_ID_REQUIRED in str(error.value)
+        assert UserAccountCreateErrorCodes.USER_ID_REQUIRED in str(error.value)
 
     def test_user_id_length_min_invalid(self):
         """
@@ -53,7 +53,7 @@ class TestUserAccountCreateRequest:
                 greetingMessage="",
             )
 
-        assert ErrorCodes.USER_ID_LENGTH_INVALID in str(error.value)
+        assert UserAccountCreateErrorCodes.USER_ID_LENGTH_INVALID in str(error.value)
 
     def test_user_id_length_max_invalid(self):
         """
@@ -67,7 +67,7 @@ class TestUserAccountCreateRequest:
                 greetingMessage="",
             )
 
-        assert ErrorCodes.USER_ID_LENGTH_INVALID in str(error.value)
+        assert UserAccountCreateErrorCodes.USER_ID_LENGTH_INVALID in str(error.value)
 
     def test_user_id_format_invalid(self):
         """
@@ -80,7 +80,7 @@ class TestUserAccountCreateRequest:
                 handleName="テストユーザー",
                 greetingMessage="",
             )
-        assert ErrorCodes.USER_ID_FORMAT_INVALID in str(error.value)
+        assert UserAccountCreateErrorCodes.USER_ID_FORMAT_INVALID in str(error.value)
 
     def test_user_password_required(self):
         """パスワードが空文字で入力されていた場合、バリデーションエラーにより USER_PASSWORD_REQUIRED が返却されること"""
@@ -91,7 +91,7 @@ class TestUserAccountCreateRequest:
                 handleName="テストユーザー",
                 greetingMessage="",
             )
-        assert ErrorCodes.USER_PASSWORD_REQUIRED in str(error.value)
+        assert UserAccountCreateErrorCodes.USER_PASSWORD_REQUIRED in str(error.value)
 
     def test_user_password_length_min_invalid(self):
         """
@@ -105,7 +105,7 @@ class TestUserAccountCreateRequest:
                 greetingMessage="",
             )
 
-        assert ErrorCodes.USER_PASSWORD_LENGTH_INVALID in str(error.value)
+        assert UserAccountCreateErrorCodes.USER_PASSWORD_LENGTH_INVALID in str(error.value)
 
     def test_user_password_format_invalid(self):
         """
@@ -118,7 +118,7 @@ class TestUserAccountCreateRequest:
                 handleName="テストユーザー",
                 greetingMessage="",
             )
-        assert ErrorCodes.USER_PASSWORD_FORMAT_INVALID in str(error.value)
+        assert UserAccountCreateErrorCodes.USER_PASSWORD_FORMAT_INVALID in str(error.value)
 
     def test_handle_name_required(self):
         """
@@ -131,7 +131,7 @@ class TestUserAccountCreateRequest:
                 handleName="",
                 greetingMessage="よろしくお願いします",
             )
-        assert ErrorCodes.HANDLE_NAME_REQUIRED in str(error.value)
+        assert UserAccountCreateErrorCodes.HANDLE_NAME_REQUIRED in str(error.value)
 
     def test_handle_name_length_max_invalid(self):
         """
@@ -144,7 +144,7 @@ class TestUserAccountCreateRequest:
                 handleName="123456789012345678901234567890a",
                 greetingMessage="よろしくお願いします",
             )
-        assert ErrorCodes.HANDLE_NAME_LENGTH_INVALID in str(error.value)
+        assert UserAccountCreateErrorCodes.HANDLE_NAME_LENGTH_INVALID in str(error.value)
 
     def test_greeting_message_length_max_invalid(self):
         """
@@ -158,4 +158,4 @@ class TestUserAccountCreateRequest:
                 greetingMessage="あ" * 201,
             )
 
-        assert ErrorCodes.GREETING_MESSAGE_LENGTH_INVALID in str(error.value)
+        assert UserAccountCreateErrorCodes.GREETING_MESSAGE_LENGTH_INVALID in str(error.value)

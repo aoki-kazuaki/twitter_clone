@@ -2,7 +2,7 @@ import uuid
 
 import pytest
 
-from app.core.error_codes import ErrorCodes
+from app.core.error_codes import UserAccountCreateErrorCodes
 from app.repositories.user_account_repository import user_account_create
 from app.db.test_connection import get_test_connection
 
@@ -113,4 +113,4 @@ class TestUserAccountCreateRepository:
                 greeting_message="重複テスト",
             )
 
-        assert str(error.value) == ErrorCodes.DUPLICATE_USER_ID
+        assert str(error.value) == UserAccountCreateErrorCodes.DUPLICATE_USER_ID
