@@ -2,7 +2,7 @@ import pytest
 from fastapi import HTTPException
 from unittest.mock import patch, ANY
 
-from app.core.error_codes import ErrorCodes
+from app.core.error_codes import UserAccountCreateErrorCodes
 from app.services.user_account_service import user_account_create_service
 
 
@@ -66,7 +66,7 @@ class TestUserAccountCreateService:
 
         mock_hash_password.return_value = "hashed_password"
 
-        mock_user_account_create.side_effect = ValueError(ErrorCodes.DUPLICATE_USER_ID)
+        mock_user_account_create.side_effect = ValueError(UserAccountCreateErrorCodes.DUPLICATE_USER_ID)
 
         with pytest.raises(HTTPException) as exc_info:
             user_account_create_service(
@@ -77,7 +77,7 @@ class TestUserAccountCreateService:
             )
 
         assert exc_info.value.status_code == 409
-        assert exc_info.value.detail == ErrorCodes.DUPLICATE_USER_ID
+        assert exc_info.value.detail == UserAccountCreateErrorCodes.DUPLICATE_USER_ID
 
     @patch("app.services.user_account_service.user_account_create")
     @patch("app.services.user_account_service.hash_password")

@@ -3,7 +3,7 @@ import uuid
 from fastapi import HTTPException
 
 from app.core.security import hash_password
-from app.core.error_codes import ErrorCodes
+from app.core.error_codes import UserAccountCreateErrorCodes
 from app.repositories.user_account_repository import user_account_create
 
 
@@ -32,9 +32,9 @@ def user_account_create_service(
         }
 
     except ValueError as e:
-        if str(e) == ErrorCodes.DUPLICATE_USER_ID:
+        if str(e) == UserAccountCreateErrorCodes.DUPLICATE_USER_ID:
             raise HTTPException(
                 status_code=409,
-                detail=ErrorCodes.DUPLICATE_USER_ID,
+                detail=UserAccountCreateErrorCodes.DUPLICATE_USER_ID,
             ) from e
         raise

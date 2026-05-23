@@ -1,13 +1,10 @@
 from enum import StrEnum
 
 
-class ErrorCodes(StrEnum):
+class UserAccountCreateErrorCodes(StrEnum):
     """
-    APIエラーコード定義
+    UserAccountCreate エラーコードレスポンス
     """
-
-    # --------------------------------------------------------------------------------------
-    # UserAccountCreate
 
     # 単: ユーザーID 空文字不可
     USER_ID_REQUIRED = "USER_ID_REQUIRED"
@@ -35,4 +32,16 @@ class ErrorCodes(StrEnum):
     DUPLICATE_USER_ID = "DUPLICATE_USER_ID"
 
 
-# --------------------------------------------------------------------------------------
+class UserAuthLoginErrorCodes(StrEnum):
+    """
+    UserAuthLogin エラーコードレスポンス
+    """
+
+    # 単: ユーザーID 空文字不可
+    USER_ID_REQUIRED = "USER_ID_REQUIRED"
+
+    # 単: パスワード 空文字不可
+    USER_PASSWORD_REQUIRED = "USER_ID_REQUIRED"
+
+    # 業: ログイン時に送信させたID,パスワードが登録内容と一致していない場合
+    INVALID_USER_ID_OR_PASSWORD = "INVALID_USER_ID_OR_PASSWORD"
