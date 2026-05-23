@@ -2,11 +2,14 @@ import re
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from app.core.error_codes import ErrorCodes
+from app.core.error_codes import UserAccountCreateErrorCodes
 
 
 class CamelResponseModel(BaseModel):
-    model_config = ConfigDict(serialize_by_alias=True)
+    model_config = ConfigDict(
+        populate_by_name=True,
+        serialize_by_alias=True,
+    )
 
 
 class UserAccountCreateRequest(BaseModel):
@@ -29,11 +32,11 @@ class UserAccountCreateRequest(BaseModel):
     @classmethod
     def validate_user_id(cls, value: str):
         if value == "":
-            raise ValueError(ErrorCodes.USER_ID_REQUIRED)
+            raise ValueError(UserAccountCreateErrorCodes.USER_ID_REQUIRED)
         if len(value) < 4 or len(value) > 16:
-            raise ValueError(ErrorCodes.USER_ID_LENGTH_INVALID)
+            raise ValueError(UserAccountCreateErrorCodes.USER_ID_LENGTH_INVALID)
         if not re.fullmatch(r"[a-zA-Z0-9]+", value):
-            raise ValueError(ErrorCodes.USER_ID_FORMAT_INVALID)
+            raise ValueError(UserAccountCreateErrorCodes.USER_ID_FORMAT_INVALID)
 
         return value
 
@@ -41,11 +44,11 @@ class UserAccountCreateRequest(BaseModel):
     @classmethod
     def validate_user_password(cls, value: str):
         if value == "":
-            raise ValueError(ErrorCodes.USER_PASSWORD_REQUIRED)
+            raise ValueError(UserAccountCreateErrorCodes.USER_PASSWORD_REQUIRED)
         if len(value) < 8:
-            raise ValueError(ErrorCodes.USER_PASSWORD_LENGTH_INVALID)
+            raise ValueError(UserAccountCreateErrorCodes.USER_PASSWORD_LENGTH_INVALID)
         if not re.fullmatch(r"[a-zA-Z0-9]+", value):
-            raise ValueError(ErrorCodes.USER_PASSWORD_FORMAT_INVALID)
+            raise ValueError(UserAccountCreateErrorCodes.USER_PASSWORD_FORMAT_INVALID)
 
         return value
 
@@ -53,9 +56,9 @@ class UserAccountCreateRequest(BaseModel):
     @classmethod
     def validate_handle_name(cls, value: str):
         if value == "":
-            raise ValueError(ErrorCodes.HANDLE_NAME_REQUIRED)
+            raise ValueError(UserAccountCreateErrorCodes.HANDLE_NAME_REQUIRED)
         if len(value) > 30:
-            raise ValueError(ErrorCodes.HANDLE_NAME_LENGTH_INVALID)
+            raise ValueError(UserAccountCreateErrorCodes.HANDLE_NAME_LENGTH_INVALID)
 
         return value
 
@@ -63,7 +66,7 @@ class UserAccountCreateRequest(BaseModel):
     @classmethod
     def validate_greeting_message(cls, value: str):
         if len(value) > 200:
-            raise ValueError(ErrorCodes.GREETING_MESSAGE_LENGTH_INVALID)
+            raise ValueError(UserAccountCreateErrorCodes.GREETING_MESSAGE_LENGTH_INVALID)
 
         return value
 

@@ -1,7 +1,7 @@
 import psycopg
 
 from app.db.connection import get_connection
-from app.core.error_codes import ErrorCodes
+from app.core.error_codes import UserAccountCreateErrorCodes
 
 
 def user_account_create(
@@ -62,7 +62,7 @@ def user_account_create(
         except psycopg.errors.UniqueViolation:
             #  任意入力のユーザーIDがすでに登録されている場合、409エラーを発生させる
             conn.rollback()
-            raise ValueError(ErrorCodes.DUPLICATE_USER_ID)
+            raise ValueError(UserAccountCreateErrorCodes.DUPLICATE_USER_ID)
 
         except Exception:
             conn.rollback()

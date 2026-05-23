@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.schemas.user_account_schema import (
+from app.schemas.base_models.user_account_schema import (
     UserAccountCreateRequest,
     UserAccountCreateResponse,
 )
