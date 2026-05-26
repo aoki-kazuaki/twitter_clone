@@ -3,11 +3,11 @@ import uuid
 import pytest
 
 from app.core.error_codes import UserAccountCreateErrorCodes
-from app.repositories.user_account_repository import user_account_create
 from app.db.test_connection import get_test_connection
+from app.repositories.user_account_repository import user_account_create
 
 
-@pytest.fixture(autouse=True)  # テストの実行前と実行後で自動的に実行される
+@pytest.fixture(autouse=True)
 def cleanup_user_tables():
     """
     各テスト実行前後で user 系テーブルを初期化すること
@@ -23,6 +23,7 @@ def cleanup_user_tables():
                     user_auth
                 RESTART IDENTITY CASCADE
                 """)
+
         conn.commit()
 
     yield
@@ -35,6 +36,7 @@ def cleanup_user_tables():
                     user_auth
                 RESTART IDENTITY CASCADE
                 """)
+
         conn.commit()
 
 
@@ -58,6 +60,7 @@ class TestUserAccountCreateRepository:
             user_password="password123",
             handle_name="ユーザー名",
             greeting_message="こんにちは！",
+            connection_factory=get_test_connection,
         )
 
         with get_test_connection() as conn:
@@ -66,9 +69,9 @@ class TestUserAccountCreateRepository:
                     """
                     SELECT user_id
                     FROM user_auth
-                    WHERE user_uuid = %s
+                    WHERE user_uuid = %(user_uuid)s
                     """,
-                    (user_uuid,),
+                    {"user_uuid": user_uuid},
                 )
                 user_auth_result = cur.fetchone()
 
@@ -76,9 +79,9 @@ class TestUserAccountCreateRepository:
                     """
                     SELECT handle_name, greeting_message
                     FROM user_profile
-                    WHERE user_uuid = %s
+                    WHERE user_uuid = %(user_uuid)s
                     """,
-                    (user_uuid,),
+                    {"user_uuid": user_uuid},
                 )
                 user_profile_result = cur.fetchone()
 
@@ -102,6 +105,7 @@ class TestUserAccountCreateRepository:
             user_password="password123",
             handle_name="ユーザー名",
             greeting_message="こんにちは！",
+            connection_factory=get_test_connection,
         )
 
         with pytest.raises(ValueError) as error:
@@ -111,6 +115,7 @@ class TestUserAccountCreateRepository:
                 user_password="password123",
                 handle_name="別ユーザー",
                 greeting_message="重複テスト",
+                connection_factory=get_test_connection,
             )
 
         assert str(error.value) == UserAccountCreateErrorCodes.DUPLICATE_USER_ID

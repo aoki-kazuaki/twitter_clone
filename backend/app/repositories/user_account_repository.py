@@ -1,7 +1,8 @@
 import psycopg
+from collections.abc import Callable
 
-from app.db.connection import get_connection
 from app.core.error_codes import UserAccountCreateErrorCodes
+from app.db.connection import get_connection
 
 
 def user_account_create(
@@ -10,6 +11,7 @@ def user_account_create(
     user_password: str,
     handle_name: str,
     greeting_message: str | None,
+    connection_factory: Callable = get_connection,
 ):
     sql_user_auth = """
         INSERT INTO user_auth (
@@ -18,10 +20,10 @@ def user_account_create(
             user_password
         )
         VALUES (
-            %s,
-            %s,
-            %s
-        );
+            %(user_uuid)s,
+            %(user_id)s,
+            %(user_password)s
+        )
     """
 
     sql_user_profile = """
@@ -31,23 +33,31 @@ def user_account_create(
             greeting_message
         )
         VALUES (
-            %s,
-            %s,
-            %s
-        );
+            %(user_uuid)s,
+            %(handle_name)s,
+            %(greeting_message)s
+        )
     """
 
-    with get_connection() as conn:
+    with connection_factory() as conn:
         try:
             with conn.cursor() as cur:
                 cur.execute(
                     sql_user_auth,
-                    (user_uuid, user_id, user_password),
+                    {
+                        "user_uuid": user_uuid,
+                        "user_id": user_id,
+                        "user_password": user_password,
+                    },
                 )
 
                 cur.execute(
                     sql_user_profile,
-                    (user_uuid, handle_name, greeting_message),
+                    {
+                        "user_uuid": user_uuid,
+                        "handle_name": handle_name,
+                        "greeting_message": greeting_message,
+                    },
                 )
 
             conn.commit()
@@ -60,9 +70,10 @@ def user_account_create(
             }
 
         except psycopg.errors.UniqueViolation:
-            #  任意入力のユーザーIDがすでに登録されている場合、409エラーを発生させる
             conn.rollback()
-            raise ValueError(UserAccountCreateErrorCodes.DUPLICATE_USER_ID)
+            raise ValueError(
+                UserAccountCreateErrorCodes.DUPLICATE_USER_ID,
+            )
 
         except Exception:
             conn.rollback()
