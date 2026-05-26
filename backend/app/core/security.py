@@ -86,3 +86,10 @@ def decode_access_token(token: str) -> dict | None:
 
     except JWTError:
         return None
+
+
+def create_refresh_token_expires_at() -> datetime:
+    """
+    リフレッシュトークンの有効期限日時を生成する
+    """
+    return datetime.now(timezone.utc) + timedelta(hours=REFRESH_TOKEN_EXPIRE_HOURS)

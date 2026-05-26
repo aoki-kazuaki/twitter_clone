@@ -24,3 +24,15 @@ CREATE TABLE IF NOT EXISTS user_profile(
     profile_background_image_url TEXT,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+-- テーブルID: authRefreshTokens
+-- テーブル名（論理名）: リフレッシュトークン管理テーブル
+-- テーブル名（物理名）: auth_refresh_tokens
+-- 備考・説明: ログイン認証リフレッシュトークン管理テーブル
+CREATE TABLE IF NOT EXISTS auth_refresh_tokens(
+    refresh_token_uuid UUID PRIMARY KEY,
+    user_uuid UUID NOT NULL REFERENCES user_auth(user_uuid),
+    issued_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP NOT NULL,
+    revoked INTEGER NOT NULL DEFAULT 0
+);

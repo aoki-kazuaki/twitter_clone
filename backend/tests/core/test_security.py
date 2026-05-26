@@ -1,4 +1,6 @@
-from app.core.security import create_access_token, create_refresh_token, decode_access_token, hash_password, verify_password
+from datetime import datetime, timedelta, timezone
+
+from app.core.security import REFRESH_TOKEN_EXPIRE_HOURS, create_access_token, create_refresh_token, create_refresh_token_expires_at, decode_access_token, hash_password, verify_password
 
 
 class TestSecurity:
@@ -86,3 +88,19 @@ class TestSecurity:
         payload = decode_access_token("invalid-token")
 
         assert payload is None
+
+    def test_create_refresh_token_expires_at(self):
+        """
+        リフレッシュトークンの有効期限日時が、現在時刻 + REFRESH_TOKEN_EXPIRE_HOURS 付近になること
+        """
+        before = datetime.now(timezone.utc) + timedelta(
+            hours=REFRESH_TOKEN_EXPIRE_HOURS,
+        )
+
+        expires_at = create_refresh_token_expires_at()
+
+        after = datetime.now(timezone.utc) + timedelta(
+            hours=REFRESH_TOKEN_EXPIRE_HOURS,
+        )
+
+        assert before <= expires_at <= after
