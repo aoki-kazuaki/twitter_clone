@@ -1,7 +1,7 @@
 from uuid import uuid4
 
 from app.db.test_connection import get_test_connection
-from app.repositories.user_auth_login_repository import find_auth_user_by_user_id
+from app.repositories.user_auth_repository import find_auth_user_by_user_id
 
 
 class TestAuthLoginRepository:

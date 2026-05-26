@@ -1,6 +1,6 @@
 from fastapi import HTTPException
 from app.core.security import create_access_token, create_refresh_token, create_refresh_token_expires_at, verify_password
-from app.repositories.user_auth_login_repository import find_auth_user_by_user_id
+from backend.app.repositories.user_auth_repository import find_auth_user_by_user_id
 from app.schemas.services.user_auth import UserAuthLoginServiceResult
 from app.core.error_codes import UserAuthLoginErrorCodes
 from app.repositories.auth_token_repository import insert_refresh_token
