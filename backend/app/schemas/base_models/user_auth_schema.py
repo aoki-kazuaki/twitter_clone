@@ -43,3 +43,13 @@ class UserAuthLoginResponse(CamelResponseModel):
     """
 
     is_success: bool = Field(description="ログイン判定", alias="isSuccess")
+
+
+class UserAuthLogoutResponse(CamelResponseModel):
+    """
+    API名称(論理名): ユーザーログアウト
+    API名称(物理名): UserAuthLogout
+    HTTPメソッド: POST
+    """
+
+    is_success: bool = Field(description="ログアウト判定", alias="isSuccess")
