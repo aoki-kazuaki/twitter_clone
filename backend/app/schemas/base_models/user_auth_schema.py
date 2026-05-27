@@ -53,3 +53,13 @@ class UserAuthLogoutResponse(CamelResponseModel):
     """
 
     is_success: bool = Field(description="ログアウト判定", alias="isSuccess")
+
+
+class UserAuthTokenMeResponse(CamelResponseModel):
+    """
+    API名称(論理名): アクセストークン有効期限確認
+    API名称(物理名): UserAuthTokenMe
+    HTTPメソッド: GET
+    """
+
+    is_success: bool = Field(description="アクセストークン有効判定", alias="isSuccess")

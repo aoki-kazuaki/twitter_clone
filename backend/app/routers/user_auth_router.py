@@ -4,6 +4,7 @@ from app.schemas.base_models.user_auth_schema import (
     UserAuthLoginRequest,
     UserAuthLoginResponse,
     UserAuthLogoutResponse,
+    UserAuthTokenMeResponse,
 )
 from app.services.user_auth_service import user_auth_login_service, user_auth_logout_service
 from app.core.auth_dependencies import get_current_auth_context
@@ -50,4 +51,11 @@ def user_auth_logout_api(
     response.delete_cookie("accessToken")
     response.delete_cookie("refreshToken")
 
+    return {"is_success": True}
+
+
+@router.get("user/auth/token/me")
+def user_auth_token_me(
+    auth_context: AuthContext = Depends(get_current_auth_context),
+) -> UserAuthTokenMeResponse:
     return {"is_success": True}
