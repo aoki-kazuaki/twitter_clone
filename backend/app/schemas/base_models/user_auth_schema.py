@@ -63,3 +63,13 @@ class UserAuthTokenMeResponse(CamelResponseModel):
     """
 
     is_success: bool = Field(description="アクセストークン有効判定", alias="isSuccess")
+
+
+class UserAuthTokenUpdateResponse(CamelResponseModel):
+    """
+    API名称(論理名): アクセストークン更新
+    API名称(物理名): UserAuthTokenUpdate
+    HTTPメソッド: GET
+    """
+
+    is_success: bool = Field(description="アクセストークン有効判定", alias="isSuccess")

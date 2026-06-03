@@ -1,6 +1,15 @@
 from datetime import datetime, timedelta, timezone
 
-from app.core.security import REFRESH_TOKEN_EXPIRE_HOURS, create_access_token, create_refresh_token, create_refresh_token_expires_at, decode_access_token, hash_password, verify_password
+from app.core.security import (
+    REFRESH_TOKEN_EXPIRE_HOURS,
+    create_access_token,
+    create_refresh_token,
+    create_refresh_token_expires_at,
+    decode_access_token,
+    decode_refresh_token,
+    hash_password,
+    verify_password,
+)
 
 
 class TestSecurity:
@@ -65,6 +74,19 @@ class TestSecurity:
 
         token = create_access_token(user_uuid)
         payload = decode_access_token(token)
+
+        assert payload is not None
+        assert payload["sub"] == user_uuid
+        assert "exp" in payload
+
+    def test_decode_refresh_token_success(self):
+        """
+        生成したアクセストークンをdecodeするとuser_uuidを取得できること
+        """
+        user_uuid = "test-user-uuid"
+
+        token = create_refresh_token(user_uuid)
+        payload = decode_refresh_token(token)
 
         assert payload is not None
         assert payload["sub"] == user_uuid

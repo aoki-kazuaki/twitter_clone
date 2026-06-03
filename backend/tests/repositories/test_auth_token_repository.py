@@ -3,6 +3,7 @@ from uuid import uuid4
 
 from app.db.test_connection import get_test_connection
 from app.repositories.auth_token_repository import (
+    find_auth_refresh_token_by_refresh_token_uuid,
     find_valid_refresh_token_by_uuid,
     insert_refresh_token,
     revoke_refresh_token_by_user_uuid,
@@ -62,11 +63,7 @@ class TestAuthTokenRepository:
             conn.commit()
 
     def test_insert_refresh_token_success(self):
-        insert_refresh_token(
-            self.refresh_token_uuid,
-            self.user_uuid,
-            self.expires_at,
-        )
+        insert_refresh_token(self.refresh_token_uuid, self.user_uuid, self.expires_at, get_test_connection)
 
         result = find_valid_refresh_token_by_uuid(self.refresh_token_uuid, get_test_connection)
 
@@ -74,16 +71,26 @@ class TestAuthTokenRepository:
         assert result["expires_at"] is not None
 
     def test_revoke_refresh_token_by_user_uuid_success(self):
-        insert_refresh_token(
-            self.refresh_token_uuid,
-            self.user_uuid,
-            self.expires_at,
-        )
+        insert_refresh_token(self.refresh_token_uuid, self.user_uuid, self.expires_at, get_test_connection)
 
         revoke_refresh_token_by_user_uuid(self.user_uuid, get_test_connection)
 
-        result = find_valid_refresh_token_by_uuid(
-            self.refresh_token_uuid,
-        )
+        result = find_valid_refresh_token_by_uuid(self.refresh_token_uuid, get_test_connection)
+
+        assert result is None
+
+    def test_find_auth_refresh_token_by_refresh_token_uuid_success(self):
+        insert_refresh_token(self.refresh_token_uuid, self.user_uuid, self.expires_at, get_test_connection)
+
+        result = find_auth_refresh_token_by_refresh_token_uuid(self.refresh_token_uuid, get_test_connection)
+
+        assert result["refresh_token_uuid"] == self.refresh_token_uuid
+        assert result["user_uuid"] == self.user_uuid
+
+    def test_find_auth_refresh_token_by_refresh_token_uuid_result_none(self):
+        insert_refresh_token(self.refresh_token_uuid, self.user_uuid, self.expires_at, get_test_connection)
+        invalid_refresh_token_uuid = str(uuid4())
+
+        result = find_auth_refresh_token_by_refresh_token_uuid(invalid_refresh_token_uuid, get_test_connection)
 
         assert result is None
