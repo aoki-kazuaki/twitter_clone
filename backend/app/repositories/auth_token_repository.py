@@ -4,6 +4,8 @@ from datetime import datetime
 from app.db.connection import get_connection
 from psycopg.rows import dict_row
 
+from app.schemas.repositories.user_auth_login_repository import FindAuthRefreshTokenByRefreshTokenUuidResult
+
 
 def insert_refresh_token(
     refresh_token_uuid: str,
@@ -101,3 +103,37 @@ def revoke_refresh_token_by_user_uuid(
         except Exception:
             conn.rollback()
             raise
+
+
+def find_auth_refresh_token_by_refresh_token_uuid(
+    refresh_token_uuid: str,
+    connection_factory: Callable = get_connection,
+) -> FindAuthRefreshTokenByRefreshTokenUuidResult | None:
+    """
+    登録済みのrefresh_token_uuidを取得する
+    """
+    sql = """
+    SELECT 
+        user_uuid,
+        refresh_token_uuid
+    FROM auth_refresh_tokens
+    WHERE refresh_token_uuid = %(refresh_token_uuid)s
+    AND revoked = 0
+    """
+
+    with connection_factory() as conn:
+        with conn.cursor(row_factory=dict_row) as cur:
+            cur.execute(
+                sql,
+                {"refresh_token_uuid": refresh_token_uuid},
+            )
+
+            result = cur.fetchone()
+
+            if result is None:
+                return None
+
+            return {
+                "user_uuid": str(result["user_uuid"]),
+                "refresh_token_uuid": str(result["refresh_token_uuid"]),
+            }

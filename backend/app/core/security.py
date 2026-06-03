@@ -88,6 +88,22 @@ def decode_access_token(token: str) -> dict | None:
         return None
 
 
+def decode_refresh_token(token: str) -> dict | None:
+    """
+    リフレッシュトークンを検証しpayloadを返却する
+    """
+    try:
+        payload = jwt.decode(
+            token,
+            SECRET_KEY,
+            algorithms=[ALGORITHM],
+        )
+        return payload
+
+    except JWTError:
+        return None
+
+
 def create_refresh_token_expires_at() -> datetime:
     """
     リフレッシュトークンの有効期限日時を生成する

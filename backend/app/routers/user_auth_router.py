@@ -5,10 +5,11 @@ from app.schemas.base_models.user_auth_schema import (
     UserAuthLoginResponse,
     UserAuthLogoutResponse,
     UserAuthTokenMeResponse,
+    UserAuthTokenUpdateResponse,
 )
-from app.services.user_auth_service import user_auth_login_service, user_auth_logout_service
-from app.core.auth_dependencies import get_current_auth_context
-from app.schemas.services.auth_context import AuthContext
+from app.services.user_auth_service import user_auth_login_service, user_auth_logout_service, user_auth_token_update_service
+from app.core.auth_dependencies import get_current_auth_context, get_current_refresh_context
+from app.schemas.services.auth_context import AuthContext, AuthRefreshContext
 
 router = APIRouter()
 
@@ -41,7 +42,7 @@ def user_auth_login_api(request: UserAuthLoginRequest, response: Response):
     }
 
 
-@router.post("user/auth/logout", response_model=UserAuthLogoutResponse)
+@router.post("/user/auth/logout", response_model=UserAuthLogoutResponse)
 def user_auth_logout_api(
     response: Response,
     auth_context: AuthContext = Depends(get_current_auth_context),
@@ -54,8 +55,34 @@ def user_auth_logout_api(
     return {"is_success": True}
 
 
-@router.get("user/auth/token/me")
+@router.get("/user/auth/token/me")
 def user_auth_token_me(
     auth_context: AuthContext = Depends(get_current_auth_context),
 ) -> UserAuthTokenMeResponse:
+    return {"is_success": True}
+
+
+@router.get("/user/auth/token/update")
+def user_auth_token_update(
+    response: Response,
+    refresh_context: AuthRefreshContext = Depends(get_current_refresh_context),
+) -> UserAuthTokenUpdateResponse:
+
+    token_result = user_auth_token_update_service(refresh_context["user_uuid"], refresh_context["refresh_token_uuid"])
+
+    response.set_cookie(
+        key="accessToken",
+        value=token_result["access_token"],
+        httponly=True,
+        secure=False,  # ローカル検証中。本番HTTPSでは True
+        samesite="lax",
+    )
+
+    response.set_cookie(
+        key="refreshToken",
+        value=token_result["refresh_token"],
+        httponly=True,
+        secure=False,  # ローカル検証中。本番HTTPSでは True
+        samesite="lax",
+    )
     return {"is_success": True}
