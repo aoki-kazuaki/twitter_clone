@@ -3,7 +3,7 @@ from app.core.security import create_access_token, create_refresh_token, create_
 from app.repositories.user_auth_repository import find_auth_refresh_token_by_refresh_token_uuid, find_auth_user_by_user_id
 from app.schemas.services.user_auth import UserAuthLoginServiceResult, UserAuthTokenUpdateServiceResult
 from app.core.error_codes import UserAuthLoginErrorCodes
-from app.repositories.auth_token_repository import find_valid_refresh_token_by_uuid, insert_refresh_token, revoke_refresh_token_by_user_uuid
+from app.repositories.auth_token_repository import auth_token_find_valid_refresh_token_by_refresh_token_uuid, auth_token_insert_refresh_token, auth_token_revoke_refresh_token_by_user_uuid
 
 
 def user_auth_login_service(user_id: str, user_password: str) -> UserAuthLoginServiceResult:
@@ -21,13 +21,13 @@ def user_auth_login_service(user_id: str, user_password: str) -> UserAuthLoginSe
     refresh_token = create_refresh_token(auth_user["user_uuid"])
     expires_at = create_refresh_token_expires_at()
 
-    insert_refresh_token(refresh_token, auth_user["user_uuid"], expires_at)
+    auth_token_insert_refresh_token(refresh_token, auth_user["user_uuid"], expires_at)
 
     return {"access_token": access_token, "refresh_token": refresh_token}
 
 
 def user_auth_logout_service(user_uuid: str) -> None:
-    revoke_refresh_token_by_user_uuid(user_uuid)
+    auth_token_revoke_refresh_token_by_user_uuid(user_uuid)
 
 
 def user_auth_token_update_service(
@@ -48,7 +48,7 @@ def user_auth_token_update_service(
     new_refresh_token = create_refresh_token(user_uuid)
     refresh_token_expires_at = create_refresh_token_expires_at()
 
-    insert_refresh_token(
+    auth_token_insert_refresh_token(
         new_refresh_token,
         user_uuid,
         refresh_token_expires_at,

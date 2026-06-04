@@ -4,10 +4,10 @@ from datetime import datetime
 from app.db.connection import get_connection
 from psycopg.rows import dict_row
 
-from app.schemas.repositories.user_auth_login_repository import FindAuthRefreshTokenByRefreshTokenUuidResult
+from app.schemas.repositories.auth_token_repository import AuthTokenFindRefreshTokenByRefreshTokenUuidResult, AuthTokenFindValidRefreshTokenByRefreshTokenUuidResult
 
 
-def insert_refresh_token(
+def auth_token_insert_refresh_token(
     refresh_token_uuid: str,
     user_uuid: str,
     expires_at: datetime,
@@ -48,10 +48,10 @@ def insert_refresh_token(
             raise
 
 
-def find_valid_refresh_token_by_uuid(
+def auth_token_find_valid_refresh_token_by_refresh_token_uuid(
     refresh_token_uuid: str,
     connection_factory: Callable = get_connection,
-) -> dict | None:
+) -> AuthTokenFindValidRefreshTokenByRefreshTokenUuidResult | None:
     """
     保存済みのリフレッシュトークンを抽出する。
     無効化されている場合は非対象とする。
@@ -76,7 +76,7 @@ def find_valid_refresh_token_by_uuid(
             return {"expires_at": result["expires_at"]}
 
 
-def revoke_refresh_token_by_user_uuid(
+def auth_token_revoke_refresh_token_by_user_uuid(
     user_uuid: str,
     connection_factory: Callable = get_connection,
 ) -> None:
@@ -105,10 +105,10 @@ def revoke_refresh_token_by_user_uuid(
             raise
 
 
-def find_auth_refresh_token_by_refresh_token_uuid(
+def auth_token_find_refresh_token_by_refresh_token_uuid(
     refresh_token_uuid: str,
     connection_factory: Callable = get_connection,
-) -> FindAuthRefreshTokenByRefreshTokenUuidResult | None:
+) -> AuthTokenFindRefreshTokenByRefreshTokenUuidResult | None:
     """
     登録済みのrefresh_token_uuidを取得する
     """

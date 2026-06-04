@@ -1,8 +1,8 @@
 from pydantic import ValidationError
 import pytest
 
-from app.schemas.base_models.user_auth_schema import UserAuthLoginRequest
 from app.core.error_codes import UserAuthLoginErrorCodes
+from app.schemas.base_models.user_auth_schema import UserAuthLoginRequest
 
 
 class TestUserAuthLoginRequest:

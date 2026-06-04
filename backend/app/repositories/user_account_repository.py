@@ -3,6 +3,7 @@ from collections.abc import Callable
 
 from app.core.error_codes import UserAccountCreateErrorCodes
 from app.db.connection import get_connection
+from app.schemas.repositories.user_account_repository import UserAccountCreateResult
 
 
 def user_account_create(
@@ -12,7 +13,7 @@ def user_account_create(
     handle_name: str,
     greeting_message: str | None,
     connection_factory: Callable = get_connection,
-):
+) -> UserAccountCreateResult:
     sql_user_auth = """
         INSERT INTO user_auth (
             user_uuid,

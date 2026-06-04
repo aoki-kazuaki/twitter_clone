@@ -3,15 +3,15 @@ from collections.abc import Callable
 from psycopg.rows import dict_row
 
 from app.db.connection import get_connection
-from app.schemas.repositories.user_auth_login_repository import (
-    FindAuthUserByUserIdResult,
+from app.schemas.repositories.user_auth_repository import (
+    UserAuthFindUserAuthByUserIdResult,
 )
 
 
 def find_auth_user_by_user_id(
     user_id: str,
     connection_factory: Callable = get_connection,
-) -> FindAuthUserByUserIdResult | None:
+) -> UserAuthFindUserAuthByUserIdResult | None:
     """
     登録済みのuser_idから認証情報を取得する
     """
